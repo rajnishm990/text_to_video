@@ -1,6 +1,6 @@
 import math
 import torch
-from typing import Union, Callable, List, Tuple
+from typing import Union, Callable, List, Tuple , Generator , Any , Iterable
 
 def exists(x: Union[None, object]) -> bool:
     """
@@ -55,7 +55,7 @@ def default(val: Union[None, object], d: Union[object, Callable[[], object]]) ->
         return val
     return d() if callable(d) else d
 
-def cycle(dl: torch.utils.data.DataLoader) -> torch.utils.data.DataLoader:
+def cycle(dl: torch.utils.data.DataLoader) -> Generator[Any, None, None]:
     """
     Cycles through the data loader indefinitely.
 
