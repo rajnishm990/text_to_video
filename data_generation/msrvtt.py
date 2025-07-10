@@ -67,12 +67,13 @@ def convert_video_to_gif(video_path: str, gif_path: str, size: tuple = (64, 64),
         clip = VideoFileClip(video_path)
 
         # Resize the video to the desired size
-        clip = clip.resize(height=size[1], width=size[0])
-        
-        # Sample frames evenly from the video and convert to GIF
-        clip = clip.subclip(0, clip.duration).resize(size).set_fps(clip.fps).set_duration(clip.duration / num_frames)
+        clip = clip.resized(size)
 
-        clip.write_gif(gif_path, program='ffmpeg')
+        # Limit duration for fewer frames (rough approximation)
+        duration = clip.duration
+        short_clip = clip.subclipped(0, min(duration, duration * (num_frames / clip.fps)))
+
+        short_clip.write_gif(gif_path)
 
         print(f"Converted {video_path} to GIF and saved as {gif_path}")
     except Exception as e:
@@ -114,14 +115,14 @@ def create_training_data(df: pd.DataFrame, videos_dir: str, output_dir: str, siz
 
 def main():
     # Step 1: Download the Kaggle dataset
-    kaggle_dataset_name = 'vishnutheepb/msrvtt'
+    # kaggle_dataset_name = 'vishnutheepb/msrvtt'
     download_dir = './msrvtt_data'
-    download_kaggle_dataset(kaggle_dataset_name, download_dir)
+    # download_kaggle_dataset(kaggle_dataset_name, download_dir)
 
     # Step 2: Unzip the Kaggle dataset
-    zip_file_path = os.path.join(download_dir, 'msrvtt.zip')
+    #zip_file_path = os.path.join(download_dir, 'msrvtt.zip')
     unzip_dir = os.path.join(download_dir, 'msrvtt')
-    unzip_file(zip_file_path, unzip_dir)
+    #unzip_file(zip_file_path, unzip_dir)
 
     # Step 3: Define the path to the TrainValVideo directory where the videos are located
     videos_dir = os.path.join(unzip_dir, 'TrainValVideo')
